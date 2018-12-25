@@ -2,7 +2,7 @@
 
 MatrixMini Mini;
 MiniHitechCtrl MXctrl;
-
+char command[100];
 byte tmp;
 
 void setup() {
@@ -12,44 +12,51 @@ void setup() {
 
   Serial.println("\n Matrix Mini Hitechnic Matrix Controller Test \n");
   Serial.println("Starting Up ... ");
-  Serial.println(MXctrl.getVersion());
-  Serial.println(MXctrl.getManufacturer());
-  Serial.println(MXctrl.getType());
-  Serial.println(MXctrl.getStatus(), BIN);
-  Serial.println(MXctrl.getBattery());
+  printStatus();
 
   MXctrl.setTimeout(0);
 
-  MXctrl.motorMode(Motor1, MODE_POWER_FLOAT);
-  MXctrl.motorMode(Motor2, MODE_POWER_BRAKE);
-  MXctrl.motorMode(Motor3, MODE_SPEED);
-  MXctrl.motorMode(Motor4, MODE_POSITION);
+  // MODE_POWER_FLOAT, MODE_POWER_BREAK, MODE_SPEED, MODE_POSITION
+  MXctrl.motorMode(Motor1, MODE_POWER_BRAKE);
+  MXctrl.motorMode(Motor3, MODE_POWER_BRAKE);
 
   Serial.println("\n < Setup done > \n");
   delay(2000);
 }
 
 
-long pos, oldpos;
-int8_t i;
+
 
 void loop() {
-  Serial.println("One way");
-  for (i=-100; i<100; i++) {
-    MXctrl.motorSpeed(Motor1, i);
-    MXctrl.motorSpeed(Motor2, i); 
-    MXctrl.motorSpeed(Motor3, i); 
-    MXctrl.motorTarget(Motor4, i);
-    delay(15);
+  if(readCommand()){
+    if(strcmp(command, "status") == 0)
+      printStatus();
+    else if(command[0] == 'U')
+      car_cmd(15, 0);
+    else if(command[0] == 'D')
+      car_cmd(-15, 0);
+    else if(command[0] == 'L')
+      car_cmd(0, 15);
+    else if(command[0] == 'R')
+      car_cmd(0, -15);
+    else if(command[0] == 'S')
+      car_cmd(0, 0);
+    else if(strcmp(command, "takepicture") == 0)
+      takePic();
+    else if(strcmp(command, "dance") == 0)
+      dance();
+    else if(strcmp(command, "square") == 0)
+      square_dance();
+    else if(strcmp(command, "drunkdriving") == 0)
+      drunkDrive();
   }
-  
-  Serial.println("Or another");
-  for (i=100; i>-100; i--) {
-    MXctrl.motorSpeed(Motor1, i);
-    MXctrl.motorSpeed(Motor2, i); 
-    MXctrl.motorSpeed(Motor3, i); 
-    MXctrl.motorTarget(Motor4, i);
-    delay(15);
-  }
-  
+//  Serial.println("forward");
+//  car_cmd(20, 0);
+//  delay(1000);
+//  Serial.println("backward");
+//  car_cmd(-20, 0);
+//  delay(1000);
+//  Serial.println("stop");
+//  car_cmd(0, 0);
+//  delay(1000);
 }
