@@ -17,8 +17,8 @@ void setup() {
   MXctrl.setTimeout(0);
 
   // MODE_POWER_FLOAT, MODE_POWER_BREAK, MODE_SPEED, MODE_POSITION
-  MXctrl.motorMode(Motor1, MODE_POWER_BRAKE);
-  MXctrl.motorMode(Motor3, MODE_POWER_BRAKE);
+  MXctrl.motorMode(Motor1, MODE_SPEED);
+  MXctrl.motorMode(Motor3, MODE_SPEED);
 
   Serial.println("\n < Setup done > \n");
   delay(2000);
